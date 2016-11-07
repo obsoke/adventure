@@ -1,5 +1,5 @@
 [package]
 
-name = "adventure!"
+name = "adventure"
 version = "0.0.1"
 authors = [ "Dale Karp <dale@dale.io>" ]
