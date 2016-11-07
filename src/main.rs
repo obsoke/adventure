@@ -298,7 +298,7 @@ fn main() {
     use std::io;
 
     // send a control character to clear terminal screen
-    // source: http://bit.ly/2cFyCVY (SO link shortened)
+    // source: http://stackoverflow.com/questions/34837011/how-to-clear-terminal-screen-in-rust-after-new-line-is-printing
     print!("{}[2J", 27 as char);
 
     // create global flags
@@ -344,7 +344,6 @@ fn main() {
     println!("Press a key to begin.");
 
     let mut value = String::new();
-
     // read stdin up until \n into value, show error if something goes wrong
     io::stdin().read_line(&mut value)
         .expect("Failed to read line!");
