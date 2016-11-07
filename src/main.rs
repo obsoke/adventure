@@ -70,7 +70,6 @@ struct Connection {
     west: Option<usize>,
 }
 
-// use trait objects instead of generic trait bounds for this
 struct Item {
     name: String,
     is_grabbable: bool,
