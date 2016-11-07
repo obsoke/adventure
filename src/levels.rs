@@ -30,7 +30,7 @@ pub fn create_rooms() -> Vec<Room> {
                         println!("The cat purrs as you pick it up and fit it in your pocket.");
                         flags.update_key("pickedUpCat", true);
                     }),
-                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: i32| -> bool {
+                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: usize| -> bool {
                         if current_room == 0 && object_name == "lever" {
                             println!("The cat looks at the lever for a second before it begins to lick its paws.");
                             false
@@ -58,7 +58,7 @@ pub fn create_rooms() -> Vec<Room> {
                             println!("No matter how hard you try, the switch won't bduge. It seems to have arrived at it's final resting place.");
                         }
                     }),
-                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: i32| -> bool {
+                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: usize| -> bool {
                         // don't need to implement this for items where is_grabbable == false
                         false
                     }),
@@ -97,7 +97,7 @@ pub fn create_rooms() -> Vec<Room> {
                         println!("The shovel looks as if it has never been used before; the layer of dust that falls off as you pick it up shows that it has been sitting on that table for a long time. You slip the shovel in your pocket.");
                         flags.update_key("pickedUpShovel", true);
                     }),
-                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: i32| -> bool {
+                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: usize| -> bool {
                         // this sucks; checking if we are in the room before perfoming action
                         if current_room == 1 && object_name == "glass door" {
                             if flags.get_key("smashedDoor") == Some(&false) {
@@ -122,7 +122,7 @@ pub fn create_rooms() -> Vec<Room> {
                     on_grab: Box::new(|flags: &mut Flags| {
                         println!("You search the door for a handle or crevice but find nothing.  It's perfectly flat with nothing to grab onto.");
                     }),
-                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: i32| -> bool {
+                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: usize| -> bool {
                         // don't need to implement this for items where is_grabbable == false
                         false
                     }),
@@ -182,7 +182,7 @@ pub fn create_rooms() -> Vec<Room> {
                             println!("You pull on the limp rope. Nothing happens. You make yourself a little sad.");
                         }
                     }),
-                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: i32| -> bool {
+                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: usize| -> bool {
                         false
                     }),
                 },
@@ -198,7 +198,7 @@ pub fn create_rooms() -> Vec<Room> {
                             flags.update_key("pickedUpKey", true);
                         }
                     }),
-                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: i32| -> bool {
+                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: usize| -> bool {
                         // this sucks; checking if we are in the room before perfoming action
                         if current_room == 4 && object_name == "door" {
                                 println!("You insert the tiny silver key into the shack door and turn...");
@@ -248,7 +248,7 @@ pub fn create_rooms() -> Vec<Room> {
                             println!("'Hey, whattya want from me!?' someone yells; it seems to come from the door itself.");
                         }
                     }),
-                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: i32| -> bool {
+                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: usize| -> bool {
                         false
                     }),
                 },
@@ -279,7 +279,7 @@ pub fn create_rooms() -> Vec<Room> {
                     on_grab: Box::new(|flags: &mut Flags| {
                         println!("The altar won't budge. Something seems to be holding it in place from below.");
                     }),
-                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: i32| -> bool {
+                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: usize| -> bool {
                         false
                     }),
                 },
@@ -302,7 +302,7 @@ pub fn create_rooms() -> Vec<Room> {
 
                         flags.update_key("isGameRunning", false);
                     }),
-                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: i32| -> bool {
+                    on_use: Box::new(|flags: &mut Flags, object_name: String, current_room: usize| -> bool {
                         println!("You've made it this far, clearly you've already been using your head. Keep {} away from it!", object_name);
                         false
                     }),

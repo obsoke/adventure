@@ -64,10 +64,10 @@ impl Flags {
 
 // either the index to the next room or nothing
 struct Connection {
-    north: Option<i32>,
-    south: Option<i32>,
-    east: Option<i32>,
-    west: Option<i32>,
+    north: Option<usize>,
+    south: Option<usize>,
+    east: Option<usize>,
+    west: Option<usize>,
 }
 
 // use trait objects instead of generic trait bounds for this
@@ -75,7 +75,7 @@ struct Item {
     name: String,
     is_grabbable: bool,
     on_grab: Box<Fn(&mut Flags)>,
-    on_use: Box<Fn(&mut Flags, String, i32) -> bool>,
+    on_use: Box<Fn(&mut Flags, String, usize) -> bool>,
 }
 
 pub struct Room {
@@ -86,14 +86,14 @@ pub struct Room {
 }
 
 impl Connection {
-    pub fn new(north: Option<i32>, south: Option<i32>, east: Option<i32>, west: Option<i32>) -> Connection {
+    pub fn new(north: Option<usize>, south: Option<usize>, east: Option<usize>, west: Option<usize>) -> Connection {
         Connection { north: north, south: south, east: east, west: west }
     }
 }
 
 struct Game {
     rooms: Vec<Room>,
-    current_room: i32,
+    current_room: usize,
     inventory: Vec<Item>,
 }
 
@@ -188,10 +188,10 @@ impl Game {
         match command {
             Command::Walk(direction) => {
                 match direction {
-                    Direction::North => self.current_room = self.change_room(self.rooms[self.current_room as usize].connections.north, global_flags, &Direction::North),
-                    Direction::South => self.current_room = self.change_room(self.rooms[self.current_room as usize].connections.south, global_flags, &Direction::South),
-                    Direction::East => self.current_room = self.change_room(self.rooms[self.current_room as usize].connections.east, global_flags, &Direction::East),
-                    Direction::West => self.current_room = self.change_room(self.rooms[self.current_room as usize].connections.west, global_flags, &Direction::West),
+                    Direction::North => self.current_room = self.change_room(self.rooms[self.current_room].connections.north, global_flags, &Direction::North),
+                    Direction::South => self.current_room = self.change_room(self.rooms[self.current_room].connections.south, global_flags, &Direction::South),
+                    Direction::East => self.current_room = self.change_room(self.rooms[self.current_room].connections.east, global_flags, &Direction::East),
+                    Direction::West => self.current_room = self.change_room(self.rooms[self.current_room].connections.west, global_flags, &Direction::West),
                 }
             },
             Command::Grab(item_name) => self.pick_up_item(&item_name, &mut global_flags),
@@ -204,14 +204,14 @@ impl Game {
         }
     }
 
-    fn change_room(&self, next_room: Option<i32>, global_flags: &Flags, direction: &Direction) -> i32 {
-        if !(self.rooms[self.current_room as usize].can_move)(global_flags, direction) {
+    fn change_room(&self, next_room: Option<usize>, global_flags: &Flags, direction: &Direction) -> usize {
+        if !(self.rooms[self.current_room].can_move)(global_flags, direction) {
             println!("It seems to be a dead end.");
             return self.current_room;
         }
         match next_room {
             Some(room_id) => {
-                (self.rooms[room_id as usize].get_description)(global_flags);
+                (self.rooms[room_id].get_description)(global_flags);
                 room_id
             },
             None => {
@@ -225,16 +225,16 @@ impl Game {
         let mut found = false;
         // how to clean this up? constantly referencing things to avoid the
         // borrow checker is not fun...
-        for i in 0 .. self.rooms[self.current_room as usize].items.len() { // for every item in the room
+        for i in 0 .. self.rooms[self.current_room].items.len() { // for every item in the room
             // if item is the one we're looking for...
-            if self.rooms[self.current_room as usize].items[i].name == item_name.to_lowercase() {
+            if self.rooms[self.current_room].items[i].name == item_name.to_lowercase() {
                 // marked item as found...
                 found = true;
 
-                (self.rooms[self.current_room as usize].items[i].on_grab)(&mut global_flags); // print on_grab message
+                (self.rooms[self.current_room].items[i].on_grab)(&mut global_flags); // print on_grab message
                 // if item is grabbable, remove from room & add to inventory
-                if self.rooms[self.current_room as usize].items[i].is_grabbable {
-                    self.inventory.push(self.rooms[self.current_room as usize].items.remove(i));
+                if self.rooms[self.current_room].items[i].is_grabbable {
+                    self.inventory.push(self.rooms[self.current_room].items.remove(i));
                 }
                 // item's been found; no reason to continue to iterate through room's items
                 break;
@@ -269,7 +269,7 @@ impl Game {
     }
 
     fn look(&self, global_flags: &Flags) {
-        (self.rooms[self.current_room as usize].get_description)(global_flags);
+        (self.rooms[self.current_room].get_description)(global_flags);
     }
 
     fn list_inventory_contents(&self) {
