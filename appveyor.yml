@@ -51,7 +51,6 @@ build: false
 # modify this phase as you see fit
 test_script:
   - cargo build --verbose
-  - cargo run
 
 before_deploy:
   # Generate artifacts for release
